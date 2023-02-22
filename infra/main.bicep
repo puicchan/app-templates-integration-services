@@ -3,11 +3,12 @@ targetScope = 'subscription'
 @minLength(1)
 @maxLength(16)
 @description('Prefix for all resources, i.e. {name}storage')
-param name string
+param environmentName string
+param name string = environmentName
 
 @minLength(1)
 @description('Primary location for all resources')
-param location string = deployment().location
+param location string
 
 @description('The email address of the owner of the service')
 @minLength(1)
@@ -17,12 +18,12 @@ param publisherEmail string
 @minLength(1)
 param publisherName string
 
+var tags = { 'azd-env-name': environmentName }
+
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: 'rg-${name}'
   location: location
-  tags: {
-    apptemplate: 'IntegrationSample'
-  }
+  tags: union(tags, { apptemplate: 'IntegrationSample' })
 }
 
 
@@ -34,6 +35,7 @@ module apim './modules/apim.bicep' = {
     publisherEmail: publisherEmail
     publisherName: publisherName
     location: rg.location
+    tags: tags
   }
 }
 
@@ -43,6 +45,7 @@ module servicebus './modules/service-bus.bicep' = {
   params: {
     nameSpace: 'sb-${toLower(name)}'
     location: rg.location
+    tags: tags
   }
 }
 
@@ -52,6 +55,7 @@ module cosmosdb './modules/cosmosdb.bicep' = {
   params: {
     accountName: 'cosmos-${toLower(name)}'
     location: rg.location
+    tags: tags
   }
 }
 
@@ -62,6 +66,7 @@ module function './modules/function.bicep' = {
     appName: 'func-${toLower(name)}'
     location: rg.location
     appInsightsLocation: rg.location
+    tags: tags
   }
 }
 
