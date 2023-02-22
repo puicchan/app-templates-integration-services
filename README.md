@@ -1,5 +1,7 @@
 # Integration using Azure Service Bus and API Management
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=codespaces&repo=604926774&machine=standardLinux32gb&devcontainer_path=.devcontainer%2Fdevcontainer.json&location=WestUs2)
+
 This is a sample integration app template that walks through setting up API Management policy for sending data to Azure Service Bus. The API Management uses Managed Identity to access the Service Bus REST APIs. A Function is triggered when a message is queued in Service Bus, and it will write message data to Cosmos DB. The Function App uses Managed Identity to get access to Service Bus. This is a typical integration scenario leveraging APIs.
 
 > Refer to the [App Templates](https://github.com/microsoft/App-Templates) repo Readme for more samples that are compatible with [Azure Developer CLI (azd)](https://github.com/Azure/azure-dev/)
@@ -40,33 +42,16 @@ Other potential extensions of this architecture are:
 
 ## Deploy solution to Azure
 
-### Prerequisites
+The easiest to deploy the infrastructure and app is using the [Azure Dev CLI aka AZD](https://aka.ms/azd).  If you open this repo in GitHub CodeSpaces, all pre-requisites including azd CLI is already preinstalled.
 
-1. Local bash shell with Azure CLI or [Azure Cloud Shell](https://ms.portal.azure.com/#cloudshell/)
-1. Azure Subscription. [Create one for free](https://azure.microsoft.com/en-us/free/).
-1. Clone or fork of this repository.
+In Codespace:
+1. Open a new terminal
+1. Run `azd login`
+1. To provision and deploy, run the following command from root folder:
 
-### Deploy
-
-Login to your Azure in your terminal.
-
-```bash
-az login
-```
-
-To check your subscription.
-
-```bash
-az account show
-```
-
-Run the deployment. The deployment will create the resource group "rg-\<Name suffix for resources\>". Make sure you are in the 'app-templates-integration-services' directory.
-
-```bash
-cd app-templates-integration-services
-
-az deployment sub create --name "<unique deployment name>" --location "<Your Chosen Location>" --template-file infra/main.bicep --parameters name="<Name suffix for resources>" publisherEmail="<Publisher Email for APIM>" publisherName="<Publisher Name for APIM>" 
-```
+    ```bash
+    azd up
+    ```
 
 The following deployments will run:
 
@@ -94,5 +79,3 @@ The following deployments will run:
 ## Disclaimer
 
 The code and deployment biceps are for demonstration purposes only.
-
-
