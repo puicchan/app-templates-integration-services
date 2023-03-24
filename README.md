@@ -50,7 +50,7 @@ In Codespace:
 1. To provision and deploy, run the following command from root folder:
 
     ```bash
-    azd up --template app-templates-integration-services
+    azd up
     ```
 
 The following deployments will run:
